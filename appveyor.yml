@@ -1,28 +1,28 @@
-# appveyor file
+# AppVeyor file
 # http://www.appveyor.com/docs/appveyor-yml
 
-# build version format
 version: "{build}"
 
-# fix lineendings in Windows
-init:
-  - git config --global core.autocrlf input
+clone_depth: 10
 
-# what combinations to test
 environment:
   matrix:
-    - nodejs_version: 0.10
+    - nodejs_version: "5"
+    - nodejs_version: "4"
+    - nodejs_version: "0.10"
 
-# Get the latest stable version of Node 0.STABLE.latest
 install:
-  - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
-  - npm install -g grunt-cli
+  - ps: Install-Product node $env:nodejs_version
   - npm install
 
 build: off
 
 test_script:
-  - node --version
-  - npm --version
-  - ps: grunt test --no-color # PowerShell
-  - cmd: grunt test --no-color
+  - node --version && npm --version
+  - npm test
+
+matrix:
+  fast_finish: true
+
+cache:
+  - 'node_modules -> package.json'              # local npm modules

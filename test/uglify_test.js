@@ -14,6 +14,7 @@ exports.contrib_uglify = {
     var files = [
       'comments.js',
       'compress.js',
+      'compress_explicit.js',
       'compress_mangle.js',
       'compress_mangle_banner.js',
       'compress_mangle_beautify.js',
@@ -48,7 +49,18 @@ exports.contrib_uglify = {
       'sourcemaps_multiple2_fnName.js',
       'sourcemaps_multiple2_fnName.js.fn.map',
       'expression.json',
-      'expression.js'
+      'expression.js',
+      'mangleprops.js',
+      'mangleprops_withExcept.js',
+      'mangleprops_withExceptionsFiles.js',
+      'mangleprops_withExceptAndExceptionsFiles.js',
+      'mangleprops_withNameCacheFile1.js',
+      'mangleprops_withNameCacheFile2.js',
+      'mangleprops_withRegex.js',
+      'uglify_name_cache.json',
+      'quotes_single.js',
+      'quotes_double.js',
+      'quotes_original.js'
     ];
 
     test.expect(files.length);

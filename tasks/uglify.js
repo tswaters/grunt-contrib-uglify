@@ -2,7 +2,7 @@
  * grunt-contrib-uglify
  * http://gruntjs.com/
  *
- * Copyright (c) 2013 "Cowboy" Ben Alman, contributors
+ * Copyright (c) 2016 "Cowboy" Ben Alman, contributors
  * Licensed under the MIT license.
  */
 
@@ -14,19 +14,17 @@ var maxmin = require('maxmin');
 
 // Return the relative path from file1 => file2
 function relativePath(file1, file2) {
-
   var file1Dirname = path.dirname(file1);
   var file2Dirname = path.dirname(file2);
+
   if (file1Dirname !== file2Dirname) {
     return path.relative(file1Dirname, file2Dirname) + path.sep;
-  } else {
-    return "";
   }
-
+  return '';
 }
 
 // Converts \r\n to \n
-function normalizeLf( string ) {
+function normalizeLf(string) {
   return string.replace(/\r\n/g, '\n');
 }
 
@@ -48,7 +46,8 @@ module.exports = function(grunt) {
       expression: false,
       maxLineLen: 32000,
       ASCIIOnly: false,
-      screwIE8: false
+      screwIE8: false,
+      quoteStyle: 0
     });
 
     // Process banner.
@@ -65,9 +64,8 @@ module.exports = function(grunt) {
         if (!grunt.file.exists(filepath)) {
           grunt.log.warn('Source file ' + chalk.cyan(filepath) + ' not found.');
           return false;
-        } else {
-          return true;
         }
+        return true;
       });
 
       if (src.length === 0) {
@@ -83,12 +81,12 @@ module.exports = function(grunt) {
       }
 
       // function to get the name of the sourceMap
-      if (typeof options.sourceMapName === "function") {
+      if (typeof options.sourceMapName === 'function') {
         mapNameGenerator = options.sourceMapName;
       }
 
       // function to get the name of the sourceMapIn file
-      if (typeof options.sourceMapIn === "function") {
+      if (typeof options.sourceMapIn === 'function') {
         if (src.length !== 1) {
           grunt.fail.warn('Cannot generate `sourceMapIn` for multiple source files.');
         }
@@ -104,9 +102,8 @@ module.exports = function(grunt) {
           err.origError = e;
           grunt.fail.warn(err);
         }
-      }
       // If no name is passed append .map to the filename
-      else if (!options.sourceMapName) {
+      } else if (!options.sourceMapName) {
         options.generatedSourceMapName = f.dest + '.map';
       } else {
         options.generatedSourceMapName = options.sourceMapName;
@@ -178,7 +175,7 @@ module.exports = function(grunt) {
     });
 
     if (createdMaps > 0) {
-      grunt.log.ok(createdMaps + ' source' + grunt.util.pluralize(this.files.length, 'map/maps') + ' created.');
+      grunt.log.ok(createdMaps + ' source' + grunt.util.pluralize(createdMaps, 'map/maps') + ' created.');
     }
 
     if (createdFiles > 0) {

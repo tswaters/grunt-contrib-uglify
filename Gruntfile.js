@@ -2,7 +2,7 @@
  * grunt-contrib-uglify
  * http://gruntjs.com/
  *
- * Copyright (c) 2014 "Cowboy" Ben Alman, contributors
+ * Copyright (c) 2016 "Cowboy" Ben Alman, contributors
  * Licensed under the MIT license.
  */
 
@@ -36,6 +36,14 @@ module.exports = function(grunt) {
         },
         options: {
           mangle: false
+        }
+      },
+      compress_explicit: {
+        files: {
+          'tmp/compress_explicit.js': ['test/fixtures/src/simple.js']
+        },
+        options: {
+          compress: true
         }
       },
       compress_mangle: {
@@ -217,7 +225,8 @@ module.exports = function(grunt) {
           sourceMap: true,
           sourceMapIn: function() {
             return 'test/fixtures/src/simple2.map';
-          }
+          },
+          sourceMapIncludeSources: false
         }
       },
       sourcemap_sources: {
@@ -260,6 +269,103 @@ module.exports = function(grunt) {
             mangle: false,
             compress: false
           }
+      },
+      mangleprops: {
+        files: {
+          'tmp/mangleprops.js': ['test/fixtures/src/mangleprops.js']
+        },
+        options: {
+          mangleProperties: true
+        }
+      },
+      mangleprops_withExcept: {
+        files: {
+          'tmp/mangleprops_withExcept.js': ['test/fixtures/src/mangleprops.js']
+        },
+        options: {
+          mangle: {
+            except: ['dontMangleMeVariable']
+          },
+          mangleProperties: true
+        }
+      },
+      mangleprops_withExceptionsFiles: {
+        files: {
+          'tmp/mangleprops_withExceptionsFiles.js': ['test/fixtures/src/mangleprops.js']
+        },
+        options: {
+          mangle: {
+            toplevel: true
+          },
+          mangleProperties: true,
+          exceptionsFiles: ['test/fixtures/src/exceptionsfile1.json', 'test/fixtures/src/exceptionsfile2.json']
+        }
+      },
+      mangleprops_withExceptAndExceptionsFiles: {
+        files: {
+          'tmp/mangleprops_withExceptAndExceptionsFiles.js': ['test/fixtures/src/mangleprops.js']
+        },
+        options: {
+          mangle: {
+            toplevel: true,
+            except: ['dontMangleMeVariable']
+          },
+          mangleProperties: true,
+          exceptionsFiles: ['test/fixtures/src/exceptionsfile1.json', 'test/fixtures/src/exceptionsfile2.json']
+        }
+      },
+      mangleprops_withNameCacheFile: {
+        files: {
+          'tmp/mangleprops_withNameCacheFile1.js': ['test/fixtures/src/mangleprops.js'],
+          'tmp/mangleprops_withNameCacheFile2.js': ['test/fixtures/src/mangleprops_withNameCache.js']
+        },
+        options: {
+          mangle: {
+            toplevel: true
+          },
+          mangleProperties: true,
+          nameCache: 'tmp/uglify_name_cache.json'
+        }
+      },
+      mangleprops_withRegex: {
+        files: {
+          'tmp/mangleprops_withRegex.js': ['test/fixtures/src/mangleprops_withRegex.js']
+        },
+        options: {
+          mangleProperties: {
+            regex: /^[^#].*/
+          }
+        }
+      },
+      quotes_single: {
+        files: {
+          'tmp/quotes_single.js': ['test/fixtures/src/quotes.js']
+        },
+        options: {
+          quoteStyle: 1
+        }
+      },
+      quotes_double: {
+        files: {
+          'tmp/quotes_double.js': ['test/fixtures/src/quotes.js']
+        },
+        options: {
+          quoteStyle: 2
+        }
+      },
+      quotes_original: {
+        files: {
+          'tmp/quotes_original.js': ['test/fixtures/src/quotes.js']
+        },
+        options: {
+          quoteStyle: 3
+        }
+      },
+      mangle_isNotObject: {
+        files: {
+          'tmp/mangle.js': ['test/fixtures/src/simple.js']
+        },
+        mangle: true
       }
     },
 
@@ -267,7 +373,6 @@ module.exports = function(grunt) {
     nodeunit: {
       tests: ['test/*_test.js']
     }
-
   });
 
   // task that expects its argument (another task) to fail
@@ -276,7 +381,7 @@ module.exports = function(grunt) {
 
     var done = this.async();
 
-    function onComplete(error, result, code) {
+    function onComplete(error, result) {
       grunt.log.write("\n > " + result.stdout.split("\n").join("\n > ") + "\n");
       var rv = error ? true : new Error("Task " + task + " unexpectedly passed.");
       done(rv);
@@ -302,33 +407,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test', [
     'jshint',
     'clean',
-    'uglify:compress',
-    'uglify:compress_mangle',
-    'uglify:compress_mangle_banner',
-    'uglify:no_src',
-    'uglify:compress_mangle_except',
-    'uglify:compress_mangle_beautify',
-    'uglify:multifile',
-    'uglify:sourcemap_sources',
-    'uglify:comments',
-    'uglify:wrap',
-    'uglify:maxLineLen',
-    'uglify:ASCIIOnly',
-    'uglify:screwIE8',
-    'uglify:exportAll',
-    'uglify:enclose',
-    'uglify:sourcemap_basic',
-    'uglify:sourcemap_customName',
-    'uglify:sourcemap_customDir',
-    'uglify:sourcemap_customRoot',
-    'uglify:sourcemap_functionName',
-    'uglify:sourcemap_multiple',
-    'uglify:sourcemap_multipleFunctionNames',
-    'uglify:sourcemapin',
-    'uglify:sourcemap_sources',
-    'uglify:sourcemapin_sources',
-    'uglify:expression_json',
-    'uglify:expression_js',
+    'uglify',
     'nodeunit'
   ]);
 
